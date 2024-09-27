@@ -46,7 +46,7 @@ public class JSONTranslationExample {
      * @return the json index of the country code.
      */
     public int helper(String countryCode) {
-        for (int i = 1; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             if (jsonArray.getJSONObject(i).getString("alpha3").equals(countryCode)) {
                 return i;
             }
@@ -63,6 +63,10 @@ public class JSONTranslationExample {
      */
     public String getCountryNameTranslation(String countryCode, String languageCode) {
         int index = helper(countryCode);
+        if (index == -1) {
+            return "Country not found";
+        }
+
         return jsonArray.getJSONObject(index).getString(languageCode);
     }
 

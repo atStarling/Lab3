@@ -35,7 +35,6 @@ public class LanguageCodeConverter {
                     .getClassLoader().getResource(filename).toURI()));
             for (int i = 1; i < lines.size(); i++) {
                 String curr = lines.get(i);
-                System.out.println(curr);
                 int delta = curr.length();
                 String a2 = curr.substring(curr.lastIndexOf('\t') + 1, delta);
                 String language = curr.substring(0, curr.lastIndexOf('\t') + 1).trim();
