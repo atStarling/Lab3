@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,13 +12,17 @@ import java.util.Map;
  * This class provides the service of converting country codes to their names.
  */
 public class CountryCodeConverter {
-    HashMap<String, String> CountryA3 = new HashMap<>();
-    HashMap<String, String> A3Country = new HashMap<>();
-    HashMap<String, String> A3LanguageCode = new HashMap<>();
+    public static final int LANGUAGEEND = 10;
+    public static final int A3END = 4;
+    public static final int A3START = 8;
+    private final Map<String, String> countryA3 = new HashMap<>();
+    private final Map<String, String> a3Country = new HashMap<>();
+
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
      * in the resources folder.
      */
+
     public CountryCodeConverter() {
         this("country-codes.txt");
     }
@@ -38,15 +41,14 @@ public class CountryCodeConverter {
             for (int i = 1; i < lines.size(); i++) {
                 String line = lines.get(i).trim();
                 int size = line.length();
-                String delta = line.substring(0, size - 10).trim();
-                String alpha = line.substring(size - 8, size - 4).trim();
-                String foxtrot = line.substring(size - 4, size).trim();
-                CountryA3.put(delta, alpha);
-                A3Country.put(alpha, delta);
-                A3LanguageCode.put(alpha, foxtrot);
+                String delta = line.substring(0, size - LANGUAGEEND).trim();
+                String alpha = line.substring(size - A3START, size - A3END).trim();
+                countryA3.put(delta, alpha);
+                a3Country.put(alpha, delta);
             }
 
-        } catch (IOException | URISyntaxException ex) {
+        }
+        catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
 
@@ -59,25 +61,17 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        return A3Country.get(code.toUpperCase());
-    }
-
-    /**
-     * @param code an a3 country code
-     * @return the json language index of the respective country
-     */
-    public String fromCountrytoIndex(String code) {
-        return A3LanguageCode.get(code.toUpperCase());
+        return a3Country.get(code.toUpperCase());
     }
 
     /**
      * Returns the code of the country for the given country name.
-     *\
+     *
      * @param country the name of the country
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        return CountryA3.get(country);
+        return countryA3.get(country);
     }
 
     /**
@@ -86,6 +80,6 @@ public class CountryCodeConverter {
      * @return how many countries are included in this code converter.
      */
     public int getNumCountries() {
-        return CountryA3.size();
+        return countryA3.size();
     }
 }
