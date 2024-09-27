@@ -17,4 +17,10 @@ public class CountryCodeConverterTest {
         CountryCodeConverter converter = new CountryCodeConverter();
         assertEquals(249, converter.getNumCountries());
     }
+
+    @Test
+    public void fromCountryCodetoLanguage() {
+        CountryCodeConverter converter = new CountryCodeConverter();
+        assertEquals(124, converter.fromCountrytoLanguage("CAN"));
+    }
 }

@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.css.Counter;
 
 /**
  * A minimal example of reading and using the JSON data from resources/sample.json.
@@ -21,9 +23,8 @@ public class JSONTranslationExample {
         try {
             // this next line of code reads in a file from the resources folder as a String,
             // which we then create a new JSONArray object from.
-            // TODO CheckStyle: Line is longer than 120 characters
-            //                  (note: you can split a line such that the next line starts with a .method()... call
-            String jsonString = Files.readString(Paths.get(getClass().getClassLoader().getResource("sample.json").toURI()));
+            String jsonString = Files.readString(Paths.get(getClass()
+                    .getClassLoader().getResource("sample.json").toURI()));
             this.jsonArray = new JSONArray(jsonString);
         }
         catch (IOException | URISyntaxException ex) {
@@ -36,14 +37,23 @@ public class JSONTranslationExample {
      * @return the Spanish translation of Canada
      */
     public String getCanadaCountryNameSpanishTranslation() {
-
-        // TODO Checkstyle: '30' is a magic number.
-        JSONObject canada = jsonArray.getJSONObject(30);
-        return canada.getString("es");
+        return jsonArray.getJSONObject(CANADA_INDEX).getString("es");
     }
 
-    // TODO Task: Complete the method below to generalize the above to get the country name
-    //            for any country code and language code from sample.json.
+    /**
+     * Returns the json index of the country code.
+     * @param countryCode the country, as its three-letter code.
+     * @return the json index of the country code.
+     */
+    public int helper(String countryCode) {
+        for (int i = 1; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).getString("alpha3").equals(countryCode)) {
+                return i;
+            }
+
+        }
+        return -1;
+    }
 
     /**
      * Returns the name of the country based on the provided country and language codes.
@@ -52,7 +62,8 @@ public class JSONTranslationExample {
      * @return the translation of country to the given language or "Country not found" if there is no translation.
      */
     public String getCountryNameTranslation(String countryCode, String languageCode) {
-        return "Country not found";
+        int index = helper(countryCode);
+        return jsonArray.getJSONObject(index).getString(languageCode);
     }
 
     /**
@@ -62,8 +73,10 @@ public class JSONTranslationExample {
     public static void main(String[] args) {
         JSONTranslationExample jsonTranslationExample = new JSONTranslationExample();
 
-        System.out.println(jsonTranslationExample.getCanadaCountryNameSpanishTranslation());
-        String translation = jsonTranslationExample.getCountryNameTranslation("can", "es");
+        System.out.println(jsonTranslationExample
+                .getCanadaCountryNameSpanishTranslation());
+        String translation = jsonTranslationExample
+                .getCountryNameTranslation("can", "es");
         System.out.println(translation);
     }
 }

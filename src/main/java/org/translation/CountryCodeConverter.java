@@ -15,6 +15,7 @@ import java.util.Map;
 public class CountryCodeConverter {
     HashMap<String, String> CountryA3 = new HashMap<>();
     HashMap<String, String> A3Country = new HashMap<>();
+    HashMap<String, String> A3LanguageCode = new HashMap<>();
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
      * in the resources folder.
@@ -39,8 +40,10 @@ public class CountryCodeConverter {
                 int size = line.length();
                 String delta = line.substring(0, size - 10).trim();
                 String alpha = line.substring(size - 8, size - 4).trim();
+                String foxtrot = line.substring(size - 4, size).trim();
                 CountryA3.put(delta, alpha);
                 A3Country.put(alpha, delta);
+                A3LanguageCode.put(alpha, foxtrot);
             }
 
         } catch (IOException | URISyntaxException ex) {
@@ -57,6 +60,14 @@ public class CountryCodeConverter {
      */
     public String fromCountryCode(String code) {
         return A3Country.get(code.toUpperCase());
+    }
+
+    /**
+     * @param code an a3 country code
+     * @return the json language index of the respective country
+     */
+    public String fromCountrytoIndex(String code) {
+        return A3LanguageCode.get(code.toUpperCase());
     }
 
     /**
